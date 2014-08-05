@@ -17,12 +17,17 @@ def main():
     tmpfile.write(cal)
     tmpfile.seek(0)
     tzical = tz.tzical(tmpfile)
+    try:
+        icaltz = tzical.get()
+    except ValueError:
+        # No Timezone in iCal, assume UTC?
+        icaltz = tz.tzutc()
     cal = Calendar.from_ical(cal)
     for e in cal.walk('VEVENT'):
 #        print e
 #        print "--------"
-        start = e['dtstart'].dt.replace(tzinfo=tzical.get()).astimezone(tz.tzlocal())
-        end = e['dtend'].dt.replace(tzinfo=tzical.get()).astimezone(tz.tzlocal())
+        start = e['dtstart'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
+        end = e['dtend'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
         print  'Event: %s' % e['summary']
         print  'Start: %s' % start.strftime('%a, %Y-%m-%d %H:%M %Z')
         print  'End:   %s' % end.strftime('%a, %Y-%m-%d %H:%M %Z')
