@@ -5,9 +5,11 @@ from dateutil import tz
 from datetime import datetime
 import sys
 import StringIO
+import re
 
+r_atendee = re.compile(r'mailto:', re.IGNORECASE)
 def format_atendee(a):
-    return a.replace('MAILTO:', '')
+    return r_atendee.sub('', a)
 
 def main():
     cal = sys.stdin.read()
