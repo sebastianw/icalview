@@ -28,17 +28,17 @@ def main():
 #        print "--------"
         start = e['dtstart'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
         end = e['dtend'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
-        print  'Event: %s' % e['summary']
+        print  'Event: %s' % e['summary'].encode('UTF-8')
         print  'Start: %s' % start.strftime('%a, %Y-%m-%d %H:%M %Z')
         print  'End:   %s' % end.strftime('%a, %Y-%m-%d %H:%M %Z')
         print  'Organizer: %s' % format_atendee(e['organizer'])
         print  'Status: %s' % e['status']
-        print  'Location: %s' % e['location']
+        print  'Location: %s' % e['location'].encode('UTF-8')
         if 'attendee' in e:
             print 'Atendee(s):'
             for a in e['attendee']:
                 print " %s" % format_atendee(a)
-        print '\n%s' % e['description']
+        print '\n%s' % e['description'].encode('UTF-8')
 
 if __name__ == "__main__":
     sys.exit(main())
