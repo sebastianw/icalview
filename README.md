@@ -15,5 +15,7 @@ text/calendar; icalview.py; copiousoutput
 
 ```
 auto_view text/calendar
-alternative_order text/calendar text/plain text/html # Add it to your alternative_order if you already have one
+
+# Add it to your alternative_order if you already have one
+alternative_order text/calendar text/plain text/html
 ```
