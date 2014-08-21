@@ -33,7 +33,8 @@ def main():
         print  'End:   %s' % end.strftime('%a, %Y-%m-%d %H:%M %Z')
         print  'Organizer: %s' % format_atendee(e['organizer'])
         print  'Status: %s' % e['status']
-        print  'Location: %s' % e['location'].encode('UTF-8')
+        if 'location' in e:
+            print  'Location: %s' % e['location'].encode('UTF-8')
         if 'attendee' in e:
             print 'Atendee(s):'
             for a in e['attendee']:
