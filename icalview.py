@@ -23,7 +23,11 @@ def main():
         # No Timezone in iCal, assume UTC?
         icaltz = tz.tzutc()
     cal = Calendar.from_ical(cal)
-    for e in cal.walk('VEVENT'):
+    events = cal.walk('VEVENT')
+    evnum = len(events)
+    for n, e in enumerate(events):
+        if evnum > 1:
+            print '** Event %s:' % (n+1)
 #        print e
 #        print "--------"
         start = e['dtstart'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
