@@ -35,15 +35,21 @@ def main():
         print  'Event: %s' % e['summary'].encode('UTF-8')
         print  'Start: %s' % start.strftime('%a, %Y-%m-%d %H:%M %Z')
         print  'End:   %s' % end.strftime('%a, %Y-%m-%d %H:%M %Z')
-        print  'Organizer: %s' % format_atendee(e['organizer'])
-        print  'Status: %s' % e['status']
+        if 'organizer' in e:
+            print  'Organizer: %s' % format_atendee(e['organizer'])
+        if 'status' in e:
+            print  'Status: %s' % e['status']
         if 'location' in e:
             print  'Location: %s' % e['location'].encode('UTF-8')
         if 'attendee' in e:
             print 'Atendee(s):'
-            for a in e['attendee']:
-                print " %s" % format_atendee(a)
-        print '\n%s' % e['description'].encode('UTF-8')
+            if not isinstance(e['attendee'], basestring):
+                for a in e['attendee']:
+                    print " %s" % format_atendee(a)
+            else:
+                print " %s" % format_atendee(e['attendee'])
+        if 'description' in e:
+            print '\n%s' % e['description'].encode('UTF-8')
 
 if __name__ == "__main__":
     sys.exit(main())
