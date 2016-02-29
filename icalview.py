@@ -13,8 +13,20 @@ def format_atendee(a):
 
 def main():
     cal = sys.stdin.read()
+    lines = []
+    linesx = []
+
+    for line in cal.splitlines():
+        if line.startswith('X-'):
+            # Don't process unsupported entries with dateutil.tz to
+            # avoid throwing an exception in tzical. We'll show them
+            # out to the user later.
+            linesx.append(line)
+        else:
+            lines.append(line)
+
     tmpfile = StringIO.StringIO()
-    tmpfile.write(cal)
+    tmpfile.write("\n".join(lines))
     tmpfile.seek(0)
 
     try:
@@ -69,6 +81,11 @@ def main():
 
         if e.get('description'):
             print '\n%s' % e['description'].encode('UTF-8')
+
+        if linesx:
+            print "\n-----"
+            for line in linesx:
+                print line
 
 if __name__ == "__main__":
     sys.exit(main())
