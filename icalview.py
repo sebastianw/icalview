@@ -31,14 +31,19 @@ def main():
     except ValueError:
         # No Timezone in iCal, assume UTC?
         icaltz = tz.tzutc()
+
     cal = Calendar.from_ical(cal)
     events = cal.walk('VEVENT')
     evnum = len(events)
+
     for n, e in enumerate(events):
         if evnum > 1:
             print '** Event %s:' % (n+1)
-#        print e
-#        print "--------"
+
+        # DEBUG
+        #print e
+        #print "--------"
+
         start = e['dtstart'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
         end = e['dtend'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
         print  'Event: %s' % e['summary'].encode('UTF-8')
