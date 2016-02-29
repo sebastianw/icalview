@@ -16,7 +16,16 @@ def main():
     tmpfile = StringIO.StringIO()
     tmpfile.write(cal)
     tmpfile.seek(0)
-    tzical = tz.tzical(tmpfile)
+
+    try:
+        tzical = tz.tzical(tmpfile)
+    except ValueError:
+        sys.stderr.write(
+            "Sorry, I could not read the calendar file properly.\n" +
+            "Please e-mail it to the developer so I can be fixed.\n"
+        )
+        sys.exit(1)
+
     try:
         icaltz = tzical.get()
     except ValueError:
