@@ -19,3 +19,10 @@ auto_view text/calendar
 # Add it to your alternative_order if you already have one
 alternative_order text/calendar text/plain text/html
 ```
+
+#### Required packages
+
+To use this you need a few python packages, namely:
+
+* icalendar (python-icalendar)
+* dateutil (python-dateutil)
