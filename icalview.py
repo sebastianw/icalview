@@ -13,43 +13,79 @@ def format_atendee(a):
 
 def main():
     cal = sys.stdin.read()
+    lines = []
+    linesx = []
+
+    for line in cal.splitlines():
+        if line.startswith('X-'):
+            # Don't process unsupported entries with dateutil.tz to
+            # avoid throwing an exception in tzical. We'll show them
+            # out to the user later.
+            linesx.append(line)
+        else:
+            lines.append(line)
+
     tmpfile = StringIO.StringIO()
-    tmpfile.write(cal)
+    tmpfile.write("\n".join(lines))
     tmpfile.seek(0)
-    tzical = tz.tzical(tmpfile)
+
+    try:
+        tzical = tz.tzical(tmpfile)
+    except ValueError:
+        sys.stderr.write(
+            "Sorry, I could not read the calendar file properly.\n" +
+            "Please e-mail it to the developer so I can be fixed.\n"
+        )
+        sys.exit(1)
+
     try:
         icaltz = tzical.get()
     except ValueError:
         # No Timezone in iCal, assume UTC?
         icaltz = tz.tzutc()
+
     cal = Calendar.from_ical(cal)
     events = cal.walk('VEVENT')
     evnum = len(events)
+
     for n, e in enumerate(events):
         if evnum > 1:
             print '** Event %s:' % (n+1)
-#        print e
-#        print "--------"
+
+        # DEBUG
+        #print e
+        #print "--------"
+
         start = e['dtstart'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
         end = e['dtend'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
         print  'Event: %s' % e['summary'].encode('UTF-8')
         print  'Start: %s' % start.strftime('%a, %Y-%m-%d %H:%M %Z')
         print  'End:   %s' % end.strftime('%a, %Y-%m-%d %H:%M %Z')
-        if 'organizer' in e:
+
+        if e.get('organizer'):
             print  'Organizer: %s' % format_atendee(e['organizer'])
-        if 'status' in e:
+
+        if e.get('status'):
             print  'Status: %s' % e['status']
-        if 'location' in e:
+
+        if e.get('location'):
             print  'Location: %s' % e['location'].encode('UTF-8')
-        if 'attendee' in e:
+
+        if e.get('attendee'):
             print 'Atendee(s):'
             if not isinstance(e['attendee'], basestring):
                 for a in e['attendee']:
                     print " %s" % format_atendee(a)
             else:
                 print " %s" % format_atendee(e['attendee'])
-        if 'description' in e:
+
+        if e.get('description'):
             print '\n%s' % e['description'].encode('UTF-8')
+
+        if linesx:
+            print "\n-----"
+            for line in linesx:
+                print line
 
 if __name__ == "__main__":
     sys.exit(main())
