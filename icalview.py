@@ -82,6 +82,10 @@ def main():
         if e.get('description'):
             print '\n%s' % e['description'].encode('UTF-8')
 
+        if e.get('comment'):
+            print  'Comment:\n%s' % e['comment'].encode('UTF-8')
+
+
         if linesx:
             print "\n-----"
             for line in linesx:
