@@ -1,10 +1,10 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 
 from icalendar import Calendar
 from dateutil import tz
 from datetime import datetime
 import sys
-import StringIO
+import io
 import re
 
 r_atendee = re.compile(r'mailto:', re.IGNORECASE)
@@ -25,7 +25,7 @@ def main():
         else:
             lines.append(line)
 
-    tmpfile = StringIO.StringIO()
+    tmpfile = io.StringIO()
     tmpfile.write("\n".join(lines))
     tmpfile.seek(0)
 
@@ -50,7 +50,7 @@ def main():
 
     for n, e in enumerate(events):
         if evnum > 1:
-            print '** Event %s:' % (n+1)
+            print('** Event {}:'.format(n+1))
 
         # DEBUG
         #print e
@@ -58,38 +58,38 @@ def main():
 
         start = e['dtstart'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
         end = e['dtend'].dt.replace(tzinfo=icaltz).astimezone(tz.tzlocal())
-        print  'Event: %s' % e['summary'].encode('UTF-8')
-        print  'Start: %s' % start.strftime('%a, %Y-%m-%d %H:%M %Z')
-        print  'End:   %s' % end.strftime('%a, %Y-%m-%d %H:%M %Z')
+        print('Event: {}'.format(e['summary']))
+        print('Start: {}'.format(start.strftime('%a, %Y-%m-%d %H:%M %Z')))
+        print('End:   {}'.format(end.strftime('%a, %Y-%m-%d %H:%M %Z')))
 
         if e.get('organizer'):
-            print  'Organizer: %s' % format_atendee(e['organizer'])
+            print('Organizer: {}'.format(format_atendee(e['organizer'])))
 
         if e.get('status'):
-            print  'Status: %s' % e['status']
+            print('Status: {}'.format(e['status']))
 
         if e.get('location'):
-            print  'Location: %s' % e['location'].encode('UTF-8')
+            print('Location: {}'.format(e['location']))
 
         if e.get('attendee'):
-            print 'Atendee(s):'
-            if not isinstance(e['attendee'], basestring):
+            print('Atendee(s):')
+            if isinstance(e['attendee'], list):
                 for a in e['attendee']:
-                    print " %s" % format_atendee(a)
+                    print(" {}".format(format_atendee(a)))
             else:
-                print " %s" % format_atendee(e['attendee'])
+                print(" {}".format(format_atendee(e['attendee'])))
 
         if e.get('description'):
-            print '\n%s' % e['description'].encode('UTF-8')
+            print('\n{}'.format(e['description']))
 
         if e.get('comment'):
-            print  'Comment:\n%s' % e['comment'].encode('UTF-8')
+            print('Comment:\n{}'.format(e['comment']))
 
 
         if linesx:
-            print "\n-----"
+            print("\n-----")
             for line in linesx:
-                print line
+                print(line)
 
 if __name__ == "__main__":
     sys.exit(main())
